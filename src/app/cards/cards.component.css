@@ -1,0 +1,40 @@
+.special {
+    color: red;
+}
+
+ul {
+    display: flex;
+    align-items: stretch; /* Default */
+    justify-content: space-between;
+    margin: 0;
+    padding: 0;
+    max-width: 80%;
+}
+
+li {
+    display: block;
+    flex: 0 1 auto; /* Default */
+    list-style-type: none;
+    background: #0abafa;
+    padding: 1em;
+}
+
+.test {
+  width: 200px;
+}
+
+.buy-deck {
+  font-size: 2em;
+  display: inline-flex;
+}
+
+#overlay {
+  /* background-color: #EEEEEE; */
+  color: silver;
+  padding-left: .5em;
+  font-size: .5em;
+  position: absolute;
+  z-index:100;
+  margin-left: 8px;
+  width: .5em;
+}

@@ -1,0 +1,64 @@
+.♣ {
+  color: green;
+}
+
+.♦ {
+  color: blue;
+}
+
+.♥ {
+  color: red;
+}
+.carta {
+  display: flex;
+  min-width: 2em;
+  min-height: 3em;
+  padding: 6px;
+  border: solid black;
+  border-width: 2px;
+  border-radius: 8px;
+  margin: auto;
+  /* max-height: 100vh; */
+  background-image: radial-gradient(white, gray);
+  font-size: 1.2em;
+  line-height: initial;
+  /* text-decoration-style: solid;
+  text-decoration: underline; */
+  letter-spacing: -4px;
+}
+
+.boxwhite {
+  color: white;
+}
+
+#symbol {
+  margin-bottom: 0.5em;
+  letter-spacing: 2px;
+  text-decoration: unset;
+  font-size: 1.8em;
+  text-align: center;
+  text-align-last: center;
+  vertical-align: middle;
+  padding-bottom: 0%;
+  margin: 0;
+}
+
+#letter-invert {
+  transform: rotate(180deg);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+#middle-row {
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.spacer {
+  flex: flex-grow;
+  flex: 1;
+}

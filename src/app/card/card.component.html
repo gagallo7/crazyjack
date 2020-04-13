@@ -1,0 +1,20 @@
+<!-- <div [ngClass]="card.naipe" class="example-box">
+    <b>{{card.value}}{{card.naipe}}</b>
+</div> -->
+
+<div id="box">
+  <div class="carta" [ngClass]="card.naipe">
+    <div class="row">
+      <div id="letter">{{ card.value }}
+      <div class="spacer"></div>
+      </div>
+    </div>
+    <div class="row" id="middle-row">
+      <div id="symbol">{{ card.naipe }}</div>
+    </div>
+    <div class="row">
+      <div class="spacer"></div>
+      <div id="letter-invert">{{ card.value }}</div>
+    </div>
+  </div>
+</div>
