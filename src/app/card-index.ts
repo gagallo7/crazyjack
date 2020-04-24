@@ -36,8 +36,10 @@ export const TO_CARD : {[key: number]: string} = {
 }
 
 export const TO_NAIPE : {[key: string]: string} = {
-    "cloves": "\u2660",
+    "spades": "\u2660",
     "hearts": "\u2665",
     "diamonds": "\u2666",
-    "spades": "\u2663",
+    "cloves": "\u2663",
 }
+
+export const START_CARD_NUMBER : number = 9;

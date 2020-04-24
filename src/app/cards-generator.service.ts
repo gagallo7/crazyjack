@@ -1,21 +1,25 @@
 import { Injectable } from '@angular/core';
 
-import { SPECIAL_NUMBERS, NAIPES, Card } from './card-index'
-import { Observable } from 'rxjs';
+import { SPECIAL_NUMBERS, NAIPES, Card } from './card-index';
+import { AssertionError } from 'assert';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CardsGeneratorService {
   buyDeck: Card[] = [];
   discardDeck: Card[] = [];
-  obsTest(observer) {
-    // synchronously deliver 1, 2, and 3, then complete
-    observer.next(3);
-    observer.next(4);
-    observer.next(2);
-    // observer.complete();
-  }
+
+  static newDeck = (total = 13) => {
+    var deck: Card[] = [];
+    for (let naipe of NAIPES) {
+      for (let i = 1; i <= total; ++i) {
+        deck.push({ number: i, naipe: naipe });
+      }
+    }
+
+    return deck;
+  };
 
   constructor() {
     for (let naipe of NAIPES) {
@@ -23,7 +27,6 @@ export class CardsGeneratorService {
         this.buyDeck.push({ number: i, naipe: naipe });
       }
     }
-
   }
 
   shuffleDeck(deck: Card[]) {
@@ -37,7 +40,7 @@ export class CardsGeneratorService {
       deck.splice(index, 1);
     }
 
-    newDeck.forEach(val => deck.push(Object.assign({}, val)));
+    newDeck.forEach((val) => deck.push(Object.assign({}, val)));
 
     console.log(newDeck);
   }
@@ -58,5 +61,36 @@ export class CardsGeneratorService {
 
   isSpecialCard(n: number): boolean {
     return SPECIAL_NUMBERS.indexOf(n) >= 0;
+  }
+
+  validCards(topCard: Card, hand: Card[]): Card[] {
+    var valid: Card[] = [];
+
+    hand.forEach((card) => {
+      // Jack is always valid
+      if (CardsGeneratorService.isValidCard(topCard, card)) {
+        valid.push(card);
+      }
+    });
+
+    return valid;
+  }
+
+  static assert(condition: any, msg?: string): asserts condition {
+    if (!condition) {
+        throw new AssertionError(msg)
+    }
+  }
+
+  static isValidCard(topCard: Card, card: Card, chosenNaipe?: string): boolean {
+    if (chosenNaipe) {
+      CardsGeneratorService.assert(topCard.number === 11);
+      return chosenNaipe === card.naipe || card.number === 11;
+    }
+    return (
+      card.number == 11 ||
+      card.naipe == topCard.naipe ||
+      card.number == topCard.number
+    );
   }
 }
