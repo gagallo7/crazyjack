@@ -7,6 +7,10 @@
 </div> -->
 
 <div class="container">
+<h1>Current player {{ gameStats.current }}</h1>
+</div>
+
+<div class="container">
   <div
     cdkDropList
     cdkDropListOrientation="horizontal"
@@ -14,6 +18,7 @@
     [cdkDropListData]="aiCards"
     (cdkDropListDropped)="drop2($event)"
     [cdkDropListConnectedTo]="discardList"
+    [cdkDropListDisabled]="gameStats.current !== 1"
     #aiCardList="cdkDropList"
   >
     <div class="example-box" *ngFor="let card of aiCards" cdkDrag>
@@ -62,6 +67,7 @@
     [cdkDropListData]="myCards"
     (cdkDropListDropped)="drop2($event)"
     [cdkDropListConnectedTo]="discardList"
+    [cdkDropListDisabled]="gameStats.current !== 0"
     #myCardList="cdkDropList"
   >
     <div class="example-box" *ngFor="let card of myCards" cdkDrag>
@@ -75,5 +81,7 @@
 <button (click)="shuffleDeck(buyDeck)">Shuffle</button>
 
 <button (click)="buy()">Buy</button>
+
+<button (click)="pass()">Pass</button>
 
 <!-- <button (click)="finishTurn()">Finish Turn</button> -->

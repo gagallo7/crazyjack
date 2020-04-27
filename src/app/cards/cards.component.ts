@@ -10,8 +10,8 @@ import { CardsGeneratorService } from '../cards-generator.service';
 import { Card, START_CARD_NUMBER } from '../card-index';
 
 import {
-  createCardMachine,
   createDeckMachine,
+  PlayerStats,
 } from '../cards/+xstate/machines.config';
 import { interpret } from 'xstate';
 
@@ -30,7 +30,13 @@ export class CardsComponent implements OnInit {
     return JSON.parse(JSON.stringify(a));
   }
 
-  private mach = createDeckMachine(this.buyDeck, this.discardDeck, [this.myCards, this.aiCards]);
+  private gameStats: PlayerStats = { current: 0 };
+  private mach = createDeckMachine(
+    this.buyDeck,
+    this.discardDeck,
+    [this.myCards, this.aiCards],
+    this.gameStats
+  );
   private serv = interpret(this.mach)
     .onTransition((state) => {
       console.log(state.value);
@@ -40,9 +46,7 @@ export class CardsComponent implements OnInit {
     })
     .start();
 
-  constructor(private cgs: CardsGeneratorService) {
-
-  }
+  constructor(private cgs: CardsGeneratorService) {}
 
   get buyDeck(): Card[] {
     return this.cgs.buyDeck;
@@ -56,14 +60,20 @@ export class CardsComponent implements OnInit {
     this.cgs.shuffleDeck(deck);
   }
 
-  buy() {
-    this.myCards.push(this.buyDeck.pop());
+  buy(index: number = 0) {
+    this.hands[index].push(this.buyDeck.pop());
+  }
+
+  pass() {
+    this.serv.send({ type: 'PASS' });
   }
 
   ngOnInit(): void {
     this.shuffleDeck(this.buyDeck);
-    for (let i = 0; i < START_CARD_NUMBER; ++i) {
-      this.buy();
+    for (let idx in this.hands) {
+      for (let i = 0; i < START_CARD_NUMBER; ++i) {
+        this.buy(+idx);
+      }
     }
 
     this.discardDeck.push(this.buyDeck.pop());
@@ -91,22 +101,31 @@ export class CardsComponent implements OnInit {
   }
 
   private isFromHand(data: unknown): boolean {
-    return this.getPlayer(data) >= 0;
+    return this.getPlayer(data) == this.gameStats.current;
   }
 
   drop2(event: CdkDragDrop<string[]>, topOnly: boolean = false) {
     const from: unknown = event.previousContainer.data;
     const to: unknown = event.container.data;
     const buyAction: boolean = from === this.buyDeck && this.isFromHand(to);
-    const discardAction: boolean = this.isFromHand(from) && to === this.discardDeck;
+    const discardAction: boolean =
+      this.isFromHand(from) && to === this.discardDeck;
 
     if (buyAction) {
-      this.serv.send({type: "BUY", player: this.getPlayer(to), indexCard: event.currentIndex});
+      this.serv.send({
+        type: 'BUY',
+        player: this.getPlayer(to),
+        indexCard: event.currentIndex,
+      });
       return;
     }
 
     if (discardAction) {
-      this.serv.send({type: "DISCARD", player: this.getPlayer(from), indexCard: event.previousIndex});
+      this.serv.send({
+        type: 'DISCARD',
+        player: this.getPlayer(from),
+        indexCard: event.previousIndex,
+      });
     }
 
     return;
@@ -122,7 +141,7 @@ export class CardsComponent implements OnInit {
       }
       return;
     }
-    this.serv.send({ type: 'DISCARD', player: 0 });
+    // this.serv.send({ type: 'DISCARD', player: 0 });
     const inBuyDeck = event.item.element.nativeElement.classList.contains(
       'buy-deck'
     );
